@@ -1,16 +1,10 @@
-import {
-	Container,
-	Grid,
-	ThemeProvider,
-	Toolbar,
-	Typography,
-	createTheme,
-} from "@mui/material";
+import { Container, Grid, ThemeProvider, createTheme } from "@mui/material";
 import Card from "./components/Card";
 import { useEffect, useState } from "react";
 import { getCharacterList } from "./api/character.api";
 import Header from "./components/Header";
 import Loading from "./components/Loading";
+import Alert from "./components/Alert";
 
 const theme = createTheme({
 	palette: {
@@ -21,21 +15,31 @@ const theme = createTheme({
 function App() {
 	const [charList, setCharList] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState(null);
+	const [alert, setAlert] = useState(null);
 	const [page, setPage] = useState(1);
+	const [maxPage, setMaxPage] = useState(null);
+
+	const showAlert = () => {
+		setAlert(true);
+		setTimeout(() => {
+			setAlert(false);
+		}, 3000);
+	};
 
 	const fetchCharList = async () => {
 		setIsLoading(true);
-		setError(null);
+		setAlert(null);
 
 		try {
 			const response = await getCharacterList(page);
 			const characterList = response?.results || [];
 
+			setMaxPage(response?.info?.pages);
 			setCharList((prevList) => [...prevList, ...characterList]);
 			setPage((prevPage) => prevPage + 1);
 		} catch (err) {
-			setError(err);
+			console.log("errr", err);
+			showAlert();
 		} finally {
 			setIsLoading(false);
 		}
@@ -46,7 +50,7 @@ function App() {
 			window.innerHeight + document.documentElement.scrollTop <
 				document.documentElement.offsetHeight ||
 			isLoading ||
-			page > 42
+			page > maxPage
 		) {
 			return;
 		}
@@ -83,6 +87,12 @@ function App() {
 					))}
 				</Grid>
 				{isLoading && <Loading />}
+				{alert && (
+					<Alert
+						type={`warning`}
+						label={`Unable to process request — Please try again later!`}
+					/>
+				)}
 			</Container>
 		</ThemeProvider>
 	);
