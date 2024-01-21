@@ -41,7 +41,6 @@ const Card = ({ name, status, species, gender, origin, location, image }) => {
 							</Typography>
 							<Stack direction='row' alignItems='center' gap={1}>
 								<Circle
-									gutterBottom
 									fontSize='sm'
 									sx={{
 										color:
@@ -60,8 +59,8 @@ const Card = ({ name, status, species, gender, origin, location, image }) => {
 								</Typography>
 							</Stack>
 						</Stack>
-						{subDetails.map(({ title, content }) => (
-							<Stack direction='column'>
+						{subDetails.map(({ title, content }, index) => (
+							<Stack key={index} direction='column'>
 								<Typography
 									color={grey[400]}
 									component='div'

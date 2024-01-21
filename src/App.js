@@ -1,7 +1,16 @@
-import { Container, Grid, ThemeProvider, createTheme } from "@mui/material";
+import {
+	Container,
+	Grid,
+	ThemeProvider,
+	Toolbar,
+	Typography,
+	createTheme,
+} from "@mui/material";
 import Card from "./components/Card";
 import { useEffect, useState } from "react";
 import { getCharacterList } from "./api/character.api";
+import Header from "./components/Header";
+import Loading from "./components/Loading";
 
 const theme = createTheme({
 	palette: {
@@ -11,28 +20,56 @@ const theme = createTheme({
 
 function App() {
 	const [charList, setCharList] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState(null);
+	const [page, setPage] = useState(1);
 
 	const fetchCharList = async () => {
+		setIsLoading(true);
+		setError(null);
+
 		try {
-			const response = await getCharacterList();
+			const response = await getCharacterList(page);
 			const characterList = response?.results || [];
-			setCharList(characterList);
-		} catch (error) {
-			console.log(error);
+
+			setCharList((prevList) => [...prevList, ...characterList]);
+			setPage((prevPage) => prevPage + 1);
+		} catch (err) {
+			setError(err);
+		} finally {
+			setIsLoading(false);
 		}
 	};
+
+	const handleScroll = () => {
+		if (
+			window.innerHeight + document.documentElement.scrollTop <
+				document.documentElement.offsetHeight ||
+			isLoading ||
+			page > 42
+		) {
+			return;
+		}
+		fetchCharList();
+	};
+
+	useEffect(() => {
+		window.addEventListener("scroll", handleScroll);
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, [isLoading]);
 
 	useEffect(() => {
 		fetchCharList();
 	}, []);
 
-	console.log(charList);
+	// console.log(charList);
 	return (
 		<ThemeProvider theme={theme}>
-			<Container>
+			<Header />
+			<Container sx={{ mt: 5 }}>
 				<Grid container spacing={5}>
-					{charList?.map((character) => (
-						<Grid item xs={6}>
+					{charList?.map((character, index) => (
+						<Grid key={index} item xs={6}>
 							<Card
 								name={character?.name}
 								status={character?.status || "Unknown"}
@@ -45,6 +82,7 @@ function App() {
 						</Grid>
 					))}
 				</Grid>
+				{isLoading && <Loading />}
 			</Container>
 		</ThemeProvider>
 	);
