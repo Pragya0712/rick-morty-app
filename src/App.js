@@ -71,9 +71,14 @@ function App() {
 		<ThemeProvider theme={theme}>
 			<Header />
 			<Container sx={{ mt: 5 }}>
-				<Grid container spacing={5}>
+				<Grid
+					display='flex'
+					container
+					spacing={5}
+					justifyContent='center'
+					alignItems='stretch'>
 					{charList?.map((character, index) => (
-						<Grid key={index} item xs={6}>
+						<Grid item key={index} md={3} sm={4}>
 							<Card
 								name={character?.name}
 								status={character?.status || "Unknown"}

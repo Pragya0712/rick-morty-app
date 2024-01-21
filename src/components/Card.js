@@ -6,6 +6,7 @@ import {
 	Box,
 	Stack,
 	Grid,
+	CardActionArea,
 } from "@mui/material";
 import React from "react";
 import { green, grey, red } from "@mui/material/colors";
@@ -25,16 +26,16 @@ const Card = ({ name, status, species, gender, origin, location, image }) => {
 	];
 
 	return (
-		<CardMUI sx={{ backgroundColor: alpha(grey[700], 0.8), display: "flex" }}>
-			<Box sx={{ display: "flex", flexDirection: "row" }}>
-				<CardMedia
-					component='img'
-					sx={{ width: 200 }}
-					image={image}
-					alt={name}
-				/>
-				<CardContent sx={{ flex: "1 0 auto" }}>
-					<Grid container direction='column' gap={2}>
+		<CardMUI
+			sx={{
+				maxWidth: 300,
+				height: "100%",
+				backgroundColor: alpha(grey[700], 0.8),
+			}}>
+			<CardActionArea>
+				<CardMedia component='img' image={image} alt={name} />
+				<CardContent>
+					<Stack spacing={2}>
 						<Stack direction='column'>
 							<Typography component='div' variant='h5'>
 								{name}
@@ -62,7 +63,7 @@ const Card = ({ name, status, species, gender, origin, location, image }) => {
 						{subDetails.map(({ title, content }, index) => (
 							<Stack key={index} direction='column'>
 								<Typography
-									color={grey[400]}
+									color='text.secondary'
 									component='div'
 									variant='subtitle2'>
 									{title}
@@ -72,9 +73,9 @@ const Card = ({ name, status, species, gender, origin, location, image }) => {
 								</Typography>
 							</Stack>
 						))}
-					</Grid>
+					</Stack>
 				</CardContent>
-			</Box>
+			</CardActionArea>
 		</CardMUI>
 	);
 };

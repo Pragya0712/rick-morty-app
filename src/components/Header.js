@@ -19,14 +19,19 @@ const Header = () => {
 					mt: 3,
 					background: "transparent",
 					boxShadow: "none",
-					alignItems: "center",
 				}}>
 				<Stack direction='column' alignItems='center'>
-					<Typography variant='h5' component='div' sx={{ flexGrow: 1 }}>
+					<Typography
+						component='div'
+						align='center'
+						sx={{ typography: { sm: "h5", xs: "h6" } }}>
 						Characters of
 					</Typography>
-					<Typography variant='h1' component='div' sx={{ flexGrow: 1 }}>
-						Rick and Morty
+					<Typography
+						component='div'
+						align='center'
+						sx={{ typography: { sm: "h1", xs: "h2" } }}>
+						<Box fontWeight='fontWeightBold'>Rick and Morty</Box>
 					</Typography>
 				</Stack>
 			</AppBar>
