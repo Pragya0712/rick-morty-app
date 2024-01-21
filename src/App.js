@@ -27,6 +27,7 @@ function App() {
 	};
 
 	const fetchCharList = async () => {
+		if (isLoading) return;
 		setIsLoading(true);
 		setAlert(null);
 
@@ -38,7 +39,6 @@ function App() {
 			setCharList((prevList) => [...prevList, ...characterList]);
 			setPage((prevPage) => prevPage + 1);
 		} catch (err) {
-			console.log("errr", err);
 			showAlert();
 		} finally {
 			setIsLoading(false);
@@ -48,7 +48,7 @@ function App() {
 	const handleScroll = () => {
 		if (
 			window.innerHeight + document.documentElement.scrollTop <
-				document.documentElement.offsetHeight ||
+				document.documentElement.offsetHeight - 20 ||
 			isLoading ||
 			page > maxPage
 		) {
