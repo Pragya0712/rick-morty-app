@@ -1,7 +1,13 @@
-import { Container, Grid } from "@mui/material";
+import { Container, Grid, ThemeProvider, createTheme } from "@mui/material";
 import Card from "./components/Card";
 import { useEffect, useState } from "react";
 import { getCharacterList } from "./api/character.api";
+
+const theme = createTheme({
+	palette: {
+		mode: "dark",
+	},
+});
 
 function App() {
 	const [charList, setCharList] = useState([]);
@@ -22,9 +28,25 @@ function App() {
 
 	console.log(charList);
 	return (
-		<Container>
-			<Card />
-		</Container>
+		<ThemeProvider theme={theme}>
+			<Container>
+				<Grid container spacing={5}>
+					{charList?.map((character) => (
+						<Grid item xs={6}>
+							<Card
+								name={character?.name}
+								status={character?.status || "Unknown"}
+								species={character?.species || "Unknown"}
+								gender={character?.gender || "Unknown"}
+								origin={character?.origin?.name || "Unknown"}
+								location={character?.location?.name || "Unknown"}
+								image={character?.image}
+							/>
+						</Grid>
+					))}
+				</Grid>
+			</Container>
+		</ThemeProvider>
 	);
 }
 
